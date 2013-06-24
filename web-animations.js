@@ -2558,7 +2558,57 @@ function n(num) {
 }
 
 var transformType = {
-  zero: function(t) { throw 'UNIMPLEMENTED'; },
+  // TODO: Renee test this.
+  zero: function(value) {
+    var zeroList = new Array(value.length);
+    for(var i = 0; i < value.length; i++) {
+      zeroList[i].t = value[i].t;
+      switch(value[i].t) {
+        case 'rotate':
+        case 'rotateX':
+        case 'rotateY':
+        case 'rotateZ':
+        case 'skewX':
+        case 'skewY':
+        case 'translateX':
+        case 'translateY':
+        case 'translateZ':
+          zeroList[i].d = [0];
+          break;
+        case 'skew':
+        case 'translate':
+          zeroList[i].d = [0, 0]
+          break;
+        case 'translate3d':
+          zeroList[i].d = [0, 0, 0]
+          break;
+        case 'scaleX':
+        case 'scaleY':
+        case 'scaleZ':
+          zeroList[i].d = [1];
+          break;
+        case 'scale':
+          zeroList[i].d = [1, 1];
+          break;
+        case 'scale3d':
+          zeroList[i].d = [1, 1, 1];
+          break;
+        case 'perspective':
+          zeroList[i].d = [Infinity];
+          break;
+        case 'matrix':
+          zeroList[i].d = [1, 0, 0, 1, 0, 0];
+          break;
+        case 'matrix3d':
+          zeroList[i].d = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+          break;
+        case 'rotate3d':
+          zeroList[i].d = [value[i].d[0], value[i].d[1], value[i].d[2], 0];
+          break;
+      }
+    }
+    return zeroList;
+  },
   add: function(base, delta) { return base.concat(delta); },
   interpolate: function(from, to, f) {
     var out = []
