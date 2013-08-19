@@ -538,8 +538,11 @@ TimedItem.prototype = {
       } else {
         this._animationTime = null;
       }
-    } else if (this.localTime <
-        this.specified.startDelay + this.activeDuration) {
+    } else if ((this.localTime <
+        this.specified.startDelay + this.activeDuration) &&
+        (this.specified.fillMode == 'forwards' || this.specified.fillMode == 'both' ||
+        this.parent == null || this.parent._isCurrent())) {
+        //this.specified.startDelay + this.activeDuration) {
       this._animationTime = this.localTime - this.specified.startDelay;
     } else {
       if (this.specified.fillMode === 'forwards' ||
